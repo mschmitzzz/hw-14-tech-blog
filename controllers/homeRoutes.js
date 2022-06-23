@@ -19,18 +19,21 @@ router.get('/', async (req, res) => {
 
     const blogs = [
       {
+        id: "1",
         title: "title",
         content: "content",
         author: "author",
         date: "1/17/2022"
       },
       {
+        id: "2",
         title: "title",
         content: "content",
         author: "author",
         date: "1/17/2022"
       },
       {
+        id: "3",
         title: "title",
         content: "content",
         author: "author",
@@ -71,18 +74,43 @@ router.get('/project/:id', async (req, res) => {
 });
 
 // Use withAuth middleware to prevent access to route
-router.get('/profile', withAuth, async (req, res) => {
+// router.get('/dashboard', withAuth, async (req, res) => {
+  router.get('/dashboard', async (req, res) => {
   try {
     // Find the logged in user based on the session ID
-    const userData = await User.findByPk(req.session.user_id, {
-      attributes: { exclude: ['password'] },
-      include: [{ model: Project }],
-    });
+    // const userData = await User.findByPk(req.session.user_id, {
+    //   attributes: { exclude: ['password'] },
+    //   include: [{ model: Project }],
+    // });
 
-    const user = userData.get({ plain: true });
+    // const user = userData.get({ plain: true });
 
-    res.render('profile', {
-      ...user,
+    const blogs = [
+      {
+        id: "1",
+        title: "title",
+        content: "content",
+        author: "author",
+        date: "1/17/2022"
+      },
+      {
+        id: "2",
+        title: "title",
+        content: "content",
+        author: "author",
+        date: "1/17/2022"
+      },
+      {
+        id: "3",
+        title: "title",
+        content: "content",
+        author: "author",
+        date: "1/17/2022"
+      }
+    ]
+
+    res.render('dashboard', {
+      blogs,
       logged_in: true
     });
   } catch (err) {
@@ -98,6 +126,72 @@ router.get('/login', (req, res) => {
   }
 
   res.render('login');
+});
+
+router.get('/create-blog', (req, res) => {
+  // If the user is already logged in, redirect the request to another route
+  // if (req.session.logged_in) {
+  //   res.redirect('/profile');
+  //   return;
+  // }
+
+  res.render('create-blog', {
+    logged_in: true,
+  });
+});
+
+router.get('/edit-blog', (req, res) => {
+  // If the user is already logged in, redirect the request to another route
+  // if (req.session.logged_in) {
+  //   res.redirect('/profile');
+  //   return;
+  // }
+
+  const blog = {
+    id: "id",
+    title: "title",
+    content: "content",
+    author: "author",
+    date: "1/17/2022",
+  };
+
+  res.render('edit-blog', {
+    ...blog,
+    logged_in: true,
+  });
+});
+
+router.get('/blogs/:id', (req, res) => {
+  // If the user is already logged in, redirect the request to another route
+  // if (req.session.logged_in) {
+  //   res.redirect('/profile');
+  //   return;
+  // }
+
+  const blog = {
+    id: "id",
+    title: "title",
+    content: "content",
+    author: "author",
+    date: "1/17/2022",
+    comments: [
+      {
+        content: "This is a comment",
+        author: "author",
+        date: "1/17/2022",
+      },
+      {
+        content: "This is a comment",
+        author: "author",
+        date: "1/17/2022",
+      }
+    ]
+  };
+
+  res.render('blog-page', {
+    ...blog,
+    logged_in: true,
+  });
 });
 
 module.exports = router;
