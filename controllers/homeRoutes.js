@@ -1,45 +1,45 @@
 const router = require('express').Router();
-const { Project, User } = require('../models');
+const { Post, Comment, User } = require('../models');
 const withAuth = require('../utils/auth');
 
 router.get('/', async (req, res) => {
   try {
-    // Get all projects and JOIN with user data
-    // const projectData = await Project.findAll({
-    //   include: [
-    //     {
-    //       model: User,
-    //       attributes: ['name'],
-    //     },
-    //   ],
-    // });
+    // Get all posts and JOIN with user data
+    const postData = await Post.findAll({
+      include: [
+        {
+          model: User,
+          attributes: ['username'],
+        },
+      ],
+    });
 
     // Serialize data so the template can read it
-    // const projects = projectData.map((project) => project.get({ plain: true }));
+const blogs = postData.map((post) => post.get({ plain: true }));
 
-    const blogs = [
-      {
-        id: "1",
-        title: "title",
-        content: "content",
-        author: "author",
-        date: "1/17/2022"
-      },
-      {
-        id: "2",
-        title: "title",
-        content: "content",
-        author: "author",
-        date: "1/17/2022"
-      },
-      {
-        id: "3",
-        title: "title",
-        content: "content",
-        author: "author",
-        date: "1/17/2022"
-      }
-    ]
+    // const blogs = [
+    //   {
+    //     id: "1",
+    //     title: "title",
+    //     content: "content",
+    //     author: "author",
+    //     date: "1/17/2022"
+    //   },
+    //   {
+    //     id: "2",
+    //     title: "title",
+    //     content: "content",
+    //     author: "author",
+    //     date: "1/17/2022"
+    //   },
+    //   {
+    //     id: "3",
+    //     title: "title",
+    //     content: "content",
+    //     author: "author",
+    //     date: "1/17/2022"
+    //   }
+    // ]
 
     // Pass serialized data and session flag into template
     res.render('homepage', { 
