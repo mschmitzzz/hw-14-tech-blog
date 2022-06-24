@@ -1,3 +1,5 @@
+
+
 const router = require('express').Router();
 const { Post, Comment, User } = require('../models');
 const withAuth = require('../utils/auth');
@@ -15,36 +17,37 @@ router.get('/', async (req, res) => {
     });
 
     // Serialize data so the template can read it
-const blogs = postData.map((post) => post.get({ plain: true }));
+    const blogs = postData.map((post) => post.get({ plain: true }));
 
     // const blogs = [
     //   {
-    //     id: "1",
-    //     title: "title",
-    //     content: "content",
-    //     author: "author",
-    //     date: "1/17/2022"
+    //     id: 1,
+    //     title: 'title',
+    //     content: 'content',
+    //     author: 'author',
+    //     date: '1/17/2022',
     //   },
     //   {
-    //     id: "2",
-    //     title: "title",
-    //     content: "content",
-    //     author: "author",
-    //     date: "1/17/2022"
+    //     id: 1,
+    //     title: 'title2',
+    //     content: 'content2',
+    //     author: 'author',
+    //     date: '1/17/2022',
     //   },
     //   {
-    //     id: "3",
-    //     title: "title",
-    //     content: "content",
-    //     author: "author",
-    //     date: "1/17/2022"
-    //   }
-    // ]
+    //     id: 1,
+    //     title: 'title3',
+    //     content: 'content',
+    //     author: 'author',
+    //     date: '1/17/2022',
+    //   },
+    // ];
 
     // Pass serialized data and session flag into template
-    res.render('homepage', { 
-      blogs, 
-      logged_in: true,
+    console.log('blogs', blogs);
+    res.render('homepage', {
+      blogs,
+      logged_in: req.session.logged_in,
     });
   } catch (err) {
     res.status(500).json(err);
@@ -161,32 +164,44 @@ router.get('/edit-blog', (req, res) => {
   });
 });
 
-router.get('/blogs/:id', (req, res) => {
-  // If the user is already logged in, redirect the request to another route
-  // if (req.session.logged_in) {
-  //   res.redirect('/profile');
-  //   return;
-  // }
+router.get('/blogs/:id', async (req, res) => {
+    const postData = await Post.findByPk(req.params.id, {
+      include: [
+        {
+          model: User,
+          attributes: ['username'],
+        },
+        {
+          model: Comment,
+          include: {
+            model: User,
+            attributes: ['username'],
+          }
+        }
+      ],
+    });
 
-  const blog = {
-    id: "id",
-    title: "title",
-    content: "content",
-    author: "author",
-    date: "1/17/2022",
-    comments: [
-      {
-        content: "This is a comment",
-        author: "author",
-        date: "1/17/2022",
-      },
-      {
-        content: "This is a comment",
-        author: "author",
-        date: "1/17/2022",
-      }
-    ]
-  };
+    const blog = postData.get({ plain: true });
+
+  // const blog = {
+  //   id: "id",
+  //   title: "title",
+  //   content: "content",
+  //   author: "author",
+  //   date: "1/17/2022",
+  //   comments: [
+  //     {
+  //       content: "This is a comment",
+  //       author: "author",
+  //       date: "1/17/2022",
+  //     },
+  //     {
+  //       content: "This is a comment",
+  //       author: "author",
+  //       date: "1/17/2022",
+  //     }
+  //   ]
+  // };
 
   res.render('blog-page', {
     ...blog,
