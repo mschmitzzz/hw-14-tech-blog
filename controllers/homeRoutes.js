@@ -53,44 +53,46 @@ router.get('/', async (req, res) => {
 });
 
 // Use withAuth middleware to prevent access to route
-// router.get('/dashboard', withAuth, async (req, res) => {
-  router.get('/dashboard', async (req, res) => {
+router.get('/dashboard', withAuth, async (req, res) => {
+//router.get('/dashboard', async (req, res) => {
   try {
     // Find the logged in user based on the session ID
     const userData = await User.findByPk(req.session.user_id, {
       attributes: { exclude: ['password'] },
-      include: [{ model: Project }],
+      include: [{ model: Post }],
     });
 
-    // const user = userData.get({ plain: true });
+    const user = userData.get({ plain: true });
 
-    const blogs = [
-      {
-        id: "1",
-        title: "title",
-        content: "content",
-        author: "author",
-        date: "1/17/2022"
-      },
-      {
-        id: "2",
-        title: "title",
-        content: "content",
-        author: "author",
-        date: "1/17/2022"
-      },
-      {
-        id: "3",
-        title: "title",
-        content: "content",
-        author: "author",
-        date: "1/17/2022"
-      }
-    ]
+    console.log('user', user);
+
+    // const blogs = [
+    //   {
+    //     id: "1",
+    //     title: "title",
+    //     content: "content",
+    //     author: "author",
+    //     date: "1/17/2022"
+    //   },
+    //   {
+    //     id: "2",
+    //     title: "title",
+    //     content: "content",
+    //     author: "author",
+    //     date: "1/17/2022"
+    //   },
+    //   {
+    //     id: "3",
+    //     title: "title",
+    //     content: "content",
+    //     author: "author",
+    //     date: "1/17/2022"
+    //   }
+    // ]
 
     res.render('dashboard', {
-      blogs,
-      logged_in: true
+      ...user,
+      logged_in: req.session.logged_in,
     });
   } catch (err) {
     res.status(500).json(err);
