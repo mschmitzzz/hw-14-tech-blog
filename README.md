@@ -14,7 +14,7 @@ A CMS-style blog site similar to a Wordpress site, where developers can publish 
 
 [GitHub Repo](https://github.com/mschmitzzz/hw-14-tech-blog)
 
-[Heroku Deployed App](https://obscure-citadel-67485.herokuapp.com/)
+[Heroku Deployed App](https://glacial-escarpment-57238.herokuapp.com/)
 
 ## Installation and Usage
 
